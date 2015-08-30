@@ -68,21 +68,17 @@
 		$scope.signInShow = true;
 		$scope.failedLoginShow = false;
 		
-		
-
+		var userInfo = barginService.getUserInfo();
+		//$scope.username = uesrInfo.
+		//need to check if the user is logged in before allowing them to view their profile.  
+		//need to create an interceptor.  
+		$scope.email = userInfo.user.email;
+		console.log(userInfo.user.email);
 		$scope.loginUser = function () {
 			barginService.userLoginToken($scope.userName, $scope.password);
-			/*$rootScope.$watch(barginService.isUserLoggedIn(), function(newValue, oldValue) {
-				console.log("watch was triggered...");
-				if(newValue === true){
-					$location.path('/main');
-					console.log($location.path);
-				}	
-				//$window.location('#/views/main.html');
-				//$window.location.href("/views/main.html");
-			});*/
-			
+						
 		};
+
 		$scope.$on('Successful patient', function() {
 			$scope.userName = "";
 			$scope.password = "";

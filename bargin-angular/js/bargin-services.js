@@ -16,6 +16,7 @@
 		var observationsNextHref;
 		var observationsPrevHref;
 		var observationsGlucose;
+		var userObject;
 		
 		/* The login function authenticates a user given a username and password and after a token has been retrieved. */
 		var login = function(userName,password,accessToken) { 
@@ -190,6 +191,8 @@
 					console.log("accesstoken = " + accessToken);
 					console.log("isUserLoggedIn = " + isUserLoggedIn);
 					$location.path('/main');
+					userObject = data;
+					console.log(data);
 					//$rootScope.$broadcast("Successful login");
 					//login(username,password,accessToken);
 				}).error(function (data, status, headers, config) {
@@ -212,6 +215,9 @@
 		}
 		this.isUserLoggedIn = function () {
 			return isUserLoggedIn;
+		}
+		this.getUserInfo = function () {
+			return userObject;
 		}
 		this.getPatientId = function () {
 			return patient_id;

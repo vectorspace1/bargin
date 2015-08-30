@@ -1,16 +1,27 @@
 
 	<!-- Template for the initial login -->
 	<!--<div id="signInDiv" class="wrapper" ng-controller="LoginController" ng-show="signInShow">-->
-	<div id="signInDiv" class="wrapper" ng-show="signInShow">
-    <form id="signinForm" class="form-signin">  
+	<div id="userProfileDiv" class="wrapper" ng-show="signInShow">
+    <form id="userProfileForm" class="form-signin">  
 	  <img src="../../images/logo.png" alt="barginText API's" />	
-      <h2 class="form-signin-heading"></h2>
-      <input type="text" class="form-control" name="username" placeholder="Username" required="" autofocus="" ng-model="userName" />
-      <input type="password" class="form-control" name="password" placeholder="Password" required="" ng-model="password" />
+      <h2 class="form-signin-heading">User Profile</h2>
+      <img src="{{userProfileImage}}" alt="User Profile Image" />	
+      <input type="text" class="form-control" placeholder="Username" name="username" required="" autofocus="" ng-model="username" />
+      <input type="text" class="form-control" placeholder="First Name" name="fname" required="" autofocus="" ng-model="fname" />
+      <input type="text" class="form-control" placeholder="Last Name" name="lname" required="" autofocus="" ng-model="lname" />
+      <input type="text" class="form-control" placeholder="email" name="email" required="" autofocus="" ng-model="email" />
+      <input type="text" class="form-control" placeholder="Cell Phone" name="cellPhone" required="" autofocus="" ng-model="cellPhone" />
       <p></p>
-      <button id="loginButton" class="btn btn-lg btn-primary btn-block" type="button" ng-click="loginUser()">Login</button>
+      <button id="saveProfile" class="btn btn-lg btn-primary btn-block" type="button" ng-click="saveUserProfile()">Save</button>
 	  <br/>
 	  <p class="text-danger" ng-show="failedLoginShow">There was an error with your login.  Please try again.</p>
+    </form>
+
+    <form id="changePasswordForm" class="form-signin">
+	    <h2 class="form-signin-heading">Change Password</h2>
+	    <input type="password" class="form-control" name="password1" placeholder="Password" required="" ng-model="password1" />
+	    <input type="password" class="form-control" name="password2" placeholder="Password" required="" ng-model="password2" />
+	    <button id="updatePassword" class="btn btn-lg btn-primary btn-block" type="button" ng-click="updatePassword()">Change Password</button>
     </form>
 	</div>
 	<!-- End of intial login template -->

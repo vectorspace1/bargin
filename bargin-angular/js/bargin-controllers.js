@@ -4,9 +4,41 @@
 */	
 	
 	/* The login controller retrieves a token via the token function.  The token function calls the login function which then
-	   broadcasts a message as to whether or not a user was successful in logging in or not.  If successful then the Patient controller 
-	   and the Observations controller will both retrieve data for the patient.													*/
-	bargin.controller('LoginController', function ($scope, barginService) {
+	   broadcasts a message as to whether or not a user was successful in logging in or not.  
+	*/													
+	bargin.controller('LoginController', function ($scope, $location, barginService, $rootScope) {
+  
+		$scope.signInShow = true;
+		$scope.failedLoginShow = false;
+		
+		$scope.loginUser = function () {
+			barginService.userLoginToken($scope.userName, $scope.password);
+			/*$rootScope.$watch(barginService.isUserLoggedIn(), function(newValue, oldValue) {
+				console.log("watch was triggered...");
+				if(newValue === true){
+					$location.path('/main');
+					console.log($location.path);
+				}	
+				//$window.location('#/views/main.html');
+				//$window.location.href("/views/main.html");
+			});*/
+			
+		};
+		$scope.$on('Successful patient', function() {
+			$scope.userName = "";
+			$scope.password = "";
+			$scope.signInShow = false;
+		});
+		$scope.$on('Successful logout', function() {
+			$scope.signInShow = true;
+			$scope.failedLoginShow = false;
+		});
+		$scope.$on('Failed login', function() {
+			$scope.failedLoginShow = true;
+		});
+	});
+
+	bargin.controller('MainController', function ($scope, barginService) {
   
 		$scope.signInShow = true;
 		$scope.failedLoginShow = false;
@@ -27,6 +59,44 @@
 			$scope.failedLoginShow = true;
 		});
 	});
+
+	/* The ProfileController retrieves a token via the token function.  The token function calls the login function which then
+	   broadcasts a message as to whether or not a user was successful in logging in or not.  
+	*/													
+	bargin.controller('ProfileController', function ($scope, $location, barginService, $rootScope) {
+  
+		$scope.signInShow = true;
+		$scope.failedLoginShow = false;
+		
+		
+
+		$scope.loginUser = function () {
+			barginService.userLoginToken($scope.userName, $scope.password);
+			/*$rootScope.$watch(barginService.isUserLoggedIn(), function(newValue, oldValue) {
+				console.log("watch was triggered...");
+				if(newValue === true){
+					$location.path('/main');
+					console.log($location.path);
+				}	
+				//$window.location('#/views/main.html');
+				//$window.location.href("/views/main.html");
+			});*/
+			
+		};
+		$scope.$on('Successful patient', function() {
+			$scope.userName = "";
+			$scope.password = "";
+			$scope.signInShow = false;
+		});
+		$scope.$on('Successful logout', function() {
+			$scope.signInShow = true;
+			$scope.failedLoginShow = false;
+		});
+		$scope.$on('Failed login', function() {
+			$scope.failedLoginShow = true;
+		});
+	});
+
 	
 	/* The patient controller retrieves patient demographic data and sets the $scope model for the patient view. */
 	bargin.controller('PatientController', function ($scope, barginService) {

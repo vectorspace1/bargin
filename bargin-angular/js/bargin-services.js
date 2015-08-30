@@ -3,9 +3,11 @@
 * contains the requisite functions for retrieving data from the server. 
 */	
 	
-	bargin.service('barginService', function($http, $rootScope) {
+	bargin.service('barginService', function($http, $rootScope, $location) {
 		
 		var accessToken;
+		var isUserLoggedIn = false;
+		var expiresIn;
 		var patient_id;
 		var patientData;
 		var organization_id;
@@ -171,6 +173,7 @@
 			};
 
 		/* 
+		BARGIN
 		This is the first function called to retrieve an application token and login user.										
 		*/			
 		this.userLoginToken = function(userName, password) { 
@@ -183,19 +186,33 @@
 
 			}).success(function (data, status, headers, config) {
 					accessToken = data.access_token;
-					console.log(data);
+					isUserLoggedIn = true;
+					console.log("accesstoken = " + accessToken);
+					console.log("isUserLoggedIn = " + isUserLoggedIn);
+					$location.path('/main');
+					//$rootScope.$broadcast("Successful login");
 					//login(username,password,accessToken);
 				}).error(function (data, status, headers, config) {
 					console.log(data);
-					$rootScope.$broadcast("Failed login");
+					//$rootScope.$broadcast("Failed login");
 				});			
 			};
+
+			/*
+
+			*/
 
 		/* Below are helper functions for the controllers to retrieve necessary data. */
 		
 		this.getAccessToken = function () {
 			return accessToken; 
 		};
+		this.getExpiresIn = function () {
+			return expiresIn;
+		}
+		this.isUserLoggedIn = function () {
+			return isUserLoggedIn;
+		}
 		this.getPatientId = function () {
 			return patient_id;
 		}

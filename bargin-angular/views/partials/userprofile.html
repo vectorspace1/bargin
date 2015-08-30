@@ -1,0 +1,16 @@
+
+	<!-- Template for the initial login -->
+	<!--<div id="signInDiv" class="wrapper" ng-controller="LoginController" ng-show="signInShow">-->
+	<div id="signInDiv" class="wrapper" ng-show="signInShow">
+    <form id="signinForm" class="form-signin">  
+	  <img src="../../images/logo.png" alt="barginText API's" />	
+      <h2 class="form-signin-heading"></h2>
+      <input type="text" class="form-control" name="username" placeholder="Username" required="" autofocus="" ng-model="userName" />
+      <input type="password" class="form-control" name="password" placeholder="Password" required="" ng-model="password" />
+      <p></p>
+      <button id="loginButton" class="btn btn-lg btn-primary btn-block" type="button" ng-click="loginUser()">Login</button>
+	  <br/>
+	  <p class="text-danger" ng-show="failedLoginShow">There was an error with your login.  Please try again.</p>
+    </form>
+	</div>
+	<!-- End of intial login template -->

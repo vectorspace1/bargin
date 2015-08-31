@@ -3,7 +3,7 @@
 * contains the requisite functions for retrieving data from the server. 
 */	
 	
-	bargin.service('barginService', function($http, $rootScope, $location) {
+	bargin.service('barginService', function($http, $rootScope, $location, $window) {
 		
 		var accessToken;
 		var isUserLoggedIn = false;
@@ -186,15 +186,9 @@
 				data: JSON.stringify({"grant_type":"password", "username":userName, "password":password }),
 
 			}).success(function (data, status, headers, config) {
-					accessToken = data.access_token;
-					isUserLoggedIn = true;
-					console.log("accesstoken = " + accessToken);
-					console.log("isUserLoggedIn = " + isUserLoggedIn);
+					$window.sessionStorage.token = data.access_token;					
+					$window.sessionStorage.uuid = data.user.uuid;	
 					$location.path('/main');
-					userObject = data;
-					console.log(data);
-					//$rootScope.$broadcast("Successful login");
-					//login(username,password,accessToken);
 				}).error(function (data, status, headers, config) {
 					console.log(data);
 					//$rootScope.$broadcast("Failed login");
@@ -202,8 +196,25 @@
 			};
 
 			/*
-
+				get user profile information
 			*/
+			this.getUserProfile = function() { 
+			//var authenticateString = 'Basic ' + Base64.encode(CLIENT_ID + ':' + CLIENT_SECRET);
+
+			$http({
+				url: BASE_URL + '/users/' + $window.sessionStorage.uuid,
+				params:{'access_token': $window.sessionStorage.token},
+				method: "GET"				
+			}).success(function (data, status, headers, config) {
+					userObject = data.entities[0];	
+					console.log(userObject);
+					$rootScope.$broadcast("Got Users Profile");							
+					//$location.path('/main');
+				}).error(function (data, status, headers, config) {
+					console.log(data);
+					//$rootScope.$broadcast("Failed login");
+				});			
+			};
 
 		/* Below are helper functions for the controllers to retrieve necessary data. */
 		

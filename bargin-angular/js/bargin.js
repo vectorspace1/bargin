@@ -28,6 +28,10 @@
                 templateUrl : 'views/partials/userprofile.html',
                 controller  : 'ProfileController'
             })
+            .when('/additem', {
+                templateUrl : 'views/partials/additem.html',
+                controller  : 'ItemController'  
+            })
             /*
             // route for the about page
             .when('/main', {

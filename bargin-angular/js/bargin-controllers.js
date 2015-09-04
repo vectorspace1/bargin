@@ -87,6 +87,32 @@
 		});
 	});
 
+
+	/* The ItemController handles request from the Items pages.  
+	*/													
+	bargin.controller('ItemController', function ($scope, $location, barginService, $rootScope) {
+  
+		$scope.signInShow = true;
+		$scope.failedLoginShow = false;
+		
+		barginService.getUserProfile();		
+		$scope.$on('Got Users Profile', function() {
+			userObject = barginService.getUserInfo();
+			console.log('Got user profile');
+			$scope.userProfileImage = userObject.picture;
+			console.log(userObject.picture);
+			$scope.username = userObject.username;
+			$scope.fullName = userObject.name;
+			$scope.email = userObject.email;
+		});
+		$scope.$on('Successful logout', function() {
+			$scope.signInShow = true;
+			$scope.failedLoginShow = false;
+		});
+		$scope.$on('Failed login', function() {
+			$scope.failedLoginShow = true;
+		});
+	});
 	
 	/* The patient controller retrieves patient demographic data and sets the $scope model for the patient view. */
 	bargin.controller('PatientController', function ($scope, barginService) {

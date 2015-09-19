@@ -28,6 +28,10 @@
                 templateUrl : 'views/partials/userprofile.html',
                 controller  : 'ProfileController'
             })
+            .when('/changepassword', {
+                templateUrl : 'views/partials/change_password.html',
+                controller  : 'PasswordController'
+            })
             .when('/additem', {
                 templateUrl : 'views/partials/additem.html',
                 controller  : 'ItemController'  

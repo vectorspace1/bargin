@@ -7,15 +7,7 @@
 		
 		var accessToken;
 		var isUserLoggedIn = false;
-		var expiresIn;
-		var patient_id;
-		var patientData;
-		var organization_id;
-		var organizationData;
-		var observationsData;
-		var observationsNextHref;
-		var observationsPrevHref;
-		var observationsGlucose;
+		var expiresIn;		
 		var userObject;
 		
 		/* The login function authenticates a user given a username and password and after a token has been retrieved. */
@@ -48,112 +40,7 @@
 				});
 			};
 			
-		/* The patient function retrieves individual patient demographic data. */
-		this.patient = function() { 
-			$http({
-				url: BASE_URL_PATIENT + patient_id,
-				method: "GET",
-				headers: {'Authorization':'Bearer ' + accessToken,'Accept':'application/json'}
-				}).success(function (data, status, headers, config) {
-					console.log(data);
-					patientData = data;
-					$rootScope.$broadcast("Successful patient");
-				}).error(function (data, status, headers, config) {
-					console.log(data);
-				});
-			};
-			
-		/* The refreshPatient function retrieves individual patient demographic data. */
-		this.refreshPatient = function() { 
-			$http({
-				url: BASE_URL_PATIENT + patient_id,
-				method: "GET",
-				headers: {'Authorization':'Bearer ' + accessToken,'Accept':'application/json'}
-				}).success(function (data, status, headers, config) {
-					console.log(data);
-					patientData = data;
-					$rootScope.$broadcast("Successful refresh patient");
-				}).error(function (data, status, headers, config) {
-					console.log(data);
-				});
-			};
-			
-		/* The organization function retrieves the organization of the user. */			
-		this.organization = function(organization_id) { 
-			$http({
-				url: BASE_URL_ORGANIZATION + organization_id,
-				method: "GET",
-				headers: {'Authorization':'Bearer ' + accessToken,'Accept':'application/json'}
-				}).success(function (data, status, headers, config) {
-					console.log(data);
-					organizationData = data.name;
-					$rootScope.$broadcast("Successful organization");
-				}).error(function (data, status, headers, config) {
-					console.log(data);
-				});
-			};
-
-		/* The observations function retrieves observations given a patient. */		
-		this.observations = function() {
-			$http({
-				url: BASE_URL_OBSERVATION + '?subject:_id=' + patient_id,
-				method: "GET",
-				headers: {'Authorization':'Bearer ' + accessToken,'Accept':'application/json'}
-				}).success(function (data, status, headers, config) {
-					console.log(data);
-					observationsData = data;
-					$rootScope.$broadcast("Successful observations");
-				}).error(function (data, status, headers, config) {
-					console.log(data);
-				});
-			};
-
-		/* This the observations paging function for next. */			
-		this.observationsNext = function() {
-			$http({
-				url: observationsNextHref,
-				method: "GET",
-				headers: {'Authorization':'Bearer ' + accessToken,'Accept':'application/json'}
-				}).success(function (data, status, headers, config) {
-					console.log(data);
-					observationsData = data;
-					$rootScope.$broadcast("Successful observations");
-				}).error(function (data, status, headers, config) {
-					console.log(data);
-				});
-			};
-
-		/* This the observations paging function for previous. */			
-		this.observationsPrevious = function() {
-			$http({
-				url: observationsPrevHref,
-				method: "GET",
-				headers: {'Authorization':'Bearer ' + accessToken,'Accept':'application/json'}
-				}).success(function (data, status, headers, config) {
-					console.log(data);
-					observationsData = data;
-					$rootScope.$broadcast("Successful observations");
-				}).error(function (data, status, headers, config) {
-					console.log(data);
-				});
-			};
-
-		/* This the observations function for retrieving glucose observations for the graph. */			
-		this.observationsGlucose = function() {
-			$http({
-				//url: BASE_URL_OBSERVATION + '?subject:_id=' + patient_id + '&name=' + GLUCOSE_LOINC + '&_sort:asc=date&_count=100',
-				url: BASE_URL_OBSERVATION + '?subject:_id=' + patient_id + '&name=' + GLUCOSE_LOINC + '&_sort:asc=date&_count=100&date=>2014-01-01&date=<2014-04-01',
-				method: "GET",
-				headers: {'Authorization':'Bearer ' + accessToken,'Accept':'application/json'}
-				}).success(function (data, status, headers, config) {
-					console.log(data);
-					observationsGlucose = data;
-					$rootScope.$broadcast("glucoseObsSuccess");
-				}).error(function (data, status, headers, config) {
-					console.log(data);
-				});
-			};
-
+		
 		/* 
 		This is the first function called to retrieve an application token.  Once a token is retrieved then it
 		   makes a call to authenticate the user via the login function.										
@@ -191,7 +78,7 @@
 					$location.path('/main');
 				}).error(function (data, status, headers, config) {
 					console.log(data);
-					//$rootScope.$broadcast("Failed login");
+					$rootScope.$broadcast("Failed login");
 				});			
 			};
 
@@ -212,8 +99,38 @@
 					//$location.path('/main');
 				}).error(function (data, status, headers, config) {
 					console.log(data);
-					//$rootScope.$broadcast("Failed login");
+					$rootScope.$broadcast("Get Users Profile Failed");
 				});			
+			};
+
+			/*
+				change users password
+			*/
+			this.changePassword = function(oldPassword, newPassword) { 
+				payload = '{"oldpassword":"' + oldPassword + '", "newpassword":"' + newPassword + '"}';
+
+				//reset the users password
+				$http({
+					url: BASE_URL + '/users/' + $window.sessionStorage.uuid + '/password',
+					params:{'access_token': $window.sessionStorage.token},
+					method: "PUT",
+					headers: {'content-type':'application/json' },
+					data: payload
+
+				}).success(function (data, status, headers, config) {
+						console.log(data);						
+						console.log(userObject);
+						$rootScope.$broadcast("Change Password Successful");
+						payload = null;					
+					}).error(function (data, status, headers, config) {
+						paylod = null;
+						console.log(data);
+						if(data.error === "expired_token") {
+							$rootScope.$broadcast("Session Timeout");	
+						} else {
+							$rootScope.$broadcast("Change Password Failed");
+						}
+					});			
 			};
 
 		/* Below are helper functions for the controllers to retrieve necessary data. */
@@ -229,29 +146,5 @@
 		}
 		this.getUserInfo = function () {
 			return userObject;
-		}
-		this.getPatientId = function () {
-			return patient_id;
-		}
-		this.getPatientData = function () {
-			return patientData;
-		}
-		this.getOrganizationId = function () {
-			return organization_id;
-		}
-		this.getOrganizationData = function () {
-			return organizationData;
-		}
-		this.getObservationsData = function () {
-			return observationsData;
-		}
-		this.setObservationsNext = function(href) {
-			observationsNextHref = href;
-		}
-		this.setObservationsPrev = function(href) {
-			observationsPrevHref = href;
-		}
-		this.getGlucoseObservationsData = function () {
-			return observationsGlucose;
-		}		
+		}				
 	});

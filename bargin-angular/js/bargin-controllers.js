@@ -126,10 +126,22 @@
 		$scope.changePasswordSuccessful = false;
 
 		 $scope.changePassword = function() {
-    		barginService.changePassword($scope.oldPassword, $scope.password1);
-    		console.log("changePassword() was called!");
-    		
+
+    		if(checkPasswords($scope.password1, $scope.password2)){
+    			barginService.changePassword($scope.oldPassword, $scope.password1);
+    			console.log("changePassword() was called!");
+    		} else {
+    			$scope.passwordsDoNotMatch = true;
+    		}    		
  		 };
+
+ 		 function checkPasswords(pw1, pw2){
+ 		 	if(pw1 !== pw2){
+ 		 		return false;
+ 		 	} else {
+ 		 		return true;
+ 		 	}
+ 		 }
 
 		$scope.$on('Change Password Successful', function() {
 			userObject = barginService.getUserInfo();

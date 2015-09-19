@@ -1,29 +1,35 @@
 
 	<!-- Template for the initial login -->
 	<!--<div id="signInDiv" class="wrapper" ng-controller="LoginController" ng-show="signInShow">-->
-	<div id="userProfileDiv" class="wrapper" ng-show="signInShow">
-    <form id="userProfileForm" class="form-signin">  
+	<div id="userProfileDiv" class="wrapper">
+    <form id="userProfileForm" name="userProfileForm" novalidate class="form-signin">  
 	  <img src="../../images/logo.png" alt="barginText API's" />	
       <h2 class="form-signin-heading">User Profile</h2>
       <img src="{{userProfileImage}}" alt="User Profile Image" />
       <br><br>	
       <!--label for="inputEmail">Email</label-->
-      <input disabled type="text" class="form-control" placeholder="Username" name="username" required="" autofocus="" ng-model="username" />
+      <input disabled type="text" class="form-control" placeholder="Username" name="username" required autofocus="" ng-model="username" />
       <br>
       <!--input type="text" class="form-control" placeholder="First Name" name="fname" required="" autofocus="" ng-model="fname" />
       <input type="text" class="form-control" placeholder="Last Name" name="lname" required="" autofocus="" ng-model="lname" /-->
-      <input type="text" class="form-control" placeholder="Full Name" name="fullName" required="" autofocus="" ng-model="fullName" />
+      <input type="text" class="form-control" placeholder="Full Name" name="fullName" required autofocus="" ng-minlength=3 ng-maxlength=20 ng-model="fullName" /> <!--ng-pattern="[a-zA-Z]"-->
+      <div class="error" ng-show="userProfileForm.fullName.$dirty && userProfileForm.fullName.$invalid">
+        <p class="text-danger" class="error" ng-show="userProfileForm.fullName.$error.required">Your name is required.</p>
+        <p class="text-danger" ng-show="userProfileForm.fullName.$error.minlength">Your name is required to be at least 3 characters</p>
+        <p class="text-danger" ng-show="userProfileForm.fullName.$error.maxlength">Your name cannot be longer than 20 characters</p>
+      </div>
       <br>
-      <input type="text" class="form-control" placeholder="email" name="email" required="" autofocus="" ng-model="email" />
+      <input type="email" class="form-control" placeholder="email" name="email" required autofocus="" ng-model="email" />
       <br>
-      <input type="text" class="form-control" placeholder="Cell Phone" name="cellPhone" required="" autofocus="" ng-model="cellPhone" />
+      <input type="text" class="form-control" placeholder="Cell Phone" name="cellPhone" required autofocus="" ng-model="cellPhone" />
       <br>
       <p>
         <a id="changepassword" ng-href="#/changepassword">change password</a>
       </p>
       <button id="saveProfile" class="btn btn-lg btn-primary btn-block" type="button" ng-click="saveUserProfile()">Save</button>
 	  <br/>
-	  <p class="text-danger" ng-show="failedLoginShow">There was an error with your login.  Please try again.</p>
+	  <p class="text-danger" ng-show="profileUpdateFailed">Your profile was not updated.</p>
+    <p class="text-danger" ng-show="profileUpdatedSuccessfully">Your profile was updated successfully.</p>
     </form>   
 	</div>
 	<!-- End of intial login template -->

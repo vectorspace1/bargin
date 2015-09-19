@@ -104,6 +104,29 @@
 			};
 
 			/*
+				save user profile information
+			*/
+			this.saveUserProfile = function(fullname, email, cellphone) { 
+				payload = '{"fullname": "' + fullname + '", "email":"' + email + '", "cellphone": "' + cellphone + '"}';
+
+				$http({
+					url: BASE_URL + '/users/' + $window.sessionStorage.uuid,
+					params:{'access_token': $window.sessionStorage.token},
+					method: "PUT",
+					headers: {'content-type':'application/json' },
+					data: payload		
+
+				}).success(function (data, status, headers, config) {
+						console.log(data);
+						$rootScope.$broadcast("Profile Updated Successfully");							
+						//$location.path('/main');
+					}).error(function (data, status, headers, config) {
+						console.log(data);
+						$rootScope.$broadcast("Profile Update Failed");
+					});			
+			};
+
+			/*
 				change users password
 			*/
 			this.changePassword = function(oldPassword, newPassword) { 

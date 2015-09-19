@@ -64,26 +64,39 @@
 	   broadcasts a message as to whether or not a user was successful in logging in or not.  
 	*/													
 	bargin.controller('ProfileController', function ($scope, $location, barginService, $rootScope) {
-  
-		$scope.signInShow = true;
-		$scope.failedLoginShow = false;
-		
+  		$scope.profileUpdatedSuccessfully = false;
+  		$scope.profileUpdateFailed = false;
+
 		barginService.getUserProfile();		
+		console.log("In Profile Controller");
+
+		$scope.saveUserProfile = function() {	
+			if(validateProfile()) {
+				barginService.saveUserProfile($scope.fullName, $scope.email, $scope.cellPhone);
+			}
+		};
+
+		function validateProfile () {
+			return true;
+		}
+
 		$scope.$on('Got Users Profile', function() {
 			userObject = barginService.getUserInfo();
 			console.log('Got user profile');
 			$scope.userProfileImage = userObject.picture;
-			console.log(userObject.picture);
 			$scope.username = userObject.username;
 			$scope.fullName = userObject.name;
 			$scope.email = userObject.email;
+			$scope.cellPhone = userObject.cellphone;
+			console.log(userObject.picture);
+
 		});
-		$scope.$on('Successful logout', function() {
-			$scope.signInShow = true;
-			$scope.failedLoginShow = false;
+		$scope.$on('Profile Updated Successfully', function() {
+			$scope.profileUpdatedSuccessfully = true;
+		
 		});
-		$scope.$on('Failed login', function() {
-			$scope.failedLoginShow = true;
+		$scope.$on('Profile Update Failed', function() {
+			$scope.profileUpdateFailed = true;
 		});
 
 

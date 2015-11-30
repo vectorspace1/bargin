@@ -1,31 +1,18 @@
 
 	<!-- Template for the initial login -->
 	<!--<div id="signInDiv" class="wrapper" ng-controller="LoginController" ng-show="signInShow">-->
-	<div id="userProfileDiv" class="wrapper" ng-show="signInShow">
+	<div id="addItemDiv" class="wrapper">
     <!--<form id="userProfileForm" class="form-signin">  -->
 	  <form class="form-signin">
       <div class="form-group">
-          <label for="inputEmail">Email</label>
-          <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+          <label for="inputProductName">Name</label>
+          <input type="text" class="form-control" id="itemName" placeholder="product name" ng-model="itemName">  
+          <label for="inputPrice">Price</label>
+          <input type="text" class="form-control" id="itemPrice" placeholder="Price" ng-model="itemPrice">
+          <label for="inputDescr">Description</label>
+          <input type="text" class="form-control" id="itemDescr" placeholder="Description" ng-model="itemDescr">
       </div>
-      <div class="form-group">
-          <label for="inputPassword">Password</label>
-          <input type="password" class="form-control" id="inputPassword" placeholder="Password">
-      </div>
-      <div class="checkbox">
-          <label><input type="checkbox"> Remember me</label>
-      </div>
-      <button type="submit" class="btn btn-primary">Login</button>
+      <button type="submit" class="btn btn-primary" ng-click="addItem()">Save</button>
     </form>
-    <p class="text-danger" ng-show="failedLoginShow">There was an error with your login.  Please try again.</p>
+    <p class="text-danger" ng-show="addItemFailed">We were unable to add the item.  Please try again.</p>
     </form>
-
-    <!--
-    <form id="changePasswordForm" class="form-signin">
-	    <h2 class="form-signin-heading">Change Password</h2>
-	    <input type="password" class="form-control" name="password1" placeholder="Password" required="" ng-model="password1" />
-	    <input type="password" class="form-control" name="password2" placeholder="Password" required="" ng-model="password2" />
-	    <button id="updatePassword" class="btn btn-lg btn-primary btn-block" type="button" ng-click="updatePassword()">Change Password</button>
-    </form>
-	</div>-->
-	<!-- End of intial login template -->

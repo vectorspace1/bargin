@@ -156,6 +156,96 @@
 					});			
 			};
 
+
+			this.addItem = function(name, price, descr){
+				itemUuid = this.addItemToCollection(name, price, descr);
+				console.log("item uuid is " + itemUuid);
+				this.createRelationBetweenUserAndItem(itemUuid);	
+			}
+
+			/*
+				Add the item.
+			*/
+			this.addItemToCollection = function(name, price, descr) { 
+				payload = '{"name":"' + name + '", "price":' + price + ', "descr":"' + descr + '"}';
+				//add the item to the item collection
+				var itemUuid;
+
+				$http({
+					url: BASE_URL + '/items',
+					params:{'access_token': $window.sessionStorage.token},
+					method: "POST",
+					headers: {'content-type':'application/json'},
+					data: payload				
+				}).success(function (data, status, headers, config) {
+						itemObject = data.entities[0];	
+						itemUuid = itemObject.uuid;
+						console.log(itemObject.uuid);
+						console.log(itemObject);
+						$rootScope.$broadcast("Add Item Successful");							
+						//$location.path('/main');
+					}).error(function (data, status, headers, config) {
+						console.log(data);
+						$rootScope.$broadcast("Add Item Failed");
+					});	
+
+				return itemUuid;
+			};
+
+			/*
+			${user}
+			curl -X POST https://api.usergrid.com/<org>/<app>/<connecting_collection>/<connecting_entity>/<relationship>/<connected_entity>
+			*/
+			/*
+				Create the relationship between the user and items.
+			*/
+			this.createRelationBetweenUserAndItem = function(itemUuid) { 
+				payload = '';
+				//add the item to the item collection
+				$http({
+					url: BASE_URL + '/users/${user}/lists/items/' + itemUuid,
+					params:{'access_token': $window.sessionStorage.token},
+					method: "POST",
+					headers: {'content-type':'application/json'},
+					data: payload				
+				}).success(function (data, status, headers, config) {
+						resultObject = data.entities[0];	
+						console.log(resultObject);
+						$rootScope.$broadcast("user lists item");							
+						//$location.path('/main');
+					}).error(function (data, status, headers, config) {
+						console.log(data);
+						$rootScope.$broadcast("user list item failed");
+					});	
+			};
+
+
+			/*
+				Publish the activity to the main activity stream
+			*/
+			this.publishActivity = function() { 
+			//add the item to the item collection
+			$http({
+				url: BASE_URL + '/users/' + $window.sessionStorage.uuid,
+				params:{'access_token': $window.sessionStorage.token},
+				method: "GET"				
+			}).success(function (data, status, headers, config) {
+					userObject = data.entities[0];	
+					console.log(userObject);
+					$rootScope.$broadcast("Got Users Profile");							
+					//$location.path('/main');
+				}).error(function (data, status, headers, config) {
+					console.log(data);
+					$rootScope.$broadcast("Get Users Profile Failed");
+				});		
+
+			//associate the item to the user - do I need to do this? No. Just add the user to the item object
+			//associate the user to the item - 
+
+			};
+
+
+
 		/* Below are helper functions for the controllers to retrieve necessary data. */
 		
 		this.getAccessToken = function () {

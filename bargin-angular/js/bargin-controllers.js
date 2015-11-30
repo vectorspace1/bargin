@@ -107,25 +107,18 @@
 	*/													
 	bargin.controller('ItemController', function ($scope, $location, barginService, $rootScope) {
   
-		$scope.signInShow = true;
-		$scope.failedLoginShow = false;
+		//$scope.addItemSuccessful = true;
+		$scope.addItemFailed = false;
 		
-		barginService.getUserProfile();		
-		$scope.$on('Got Users Profile', function() {
-			userObject = barginService.getUserInfo();
-			console.log('Got user profile');
-			$scope.userProfileImage = userObject.picture;
-			console.log(userObject.picture);
-			$scope.username = userObject.username;
-			$scope.fullName = userObject.name;
-			$scope.email = userObject.email;
+		$scope.addItem = function(){ 
+			barginService.addItem($scope.itemName, $scope.itemPrice, $scope.itemDescr);		
+		}
+		$scope.$on('Add Item Successful', function() {
+			//$scope.addItemSuccessful = true;
+			$scope.addItemFailed = false;
 		});
-		$scope.$on('Successful logout', function() {
-			$scope.signInShow = true;
-			$scope.failedLoginShow = false;
-		});
-		$scope.$on('Failed login', function() {
-			$scope.failedLoginShow = true;
+		$scope.$on('Add Item Failed', function() {
+			$scope.addItemFailed = true;
 		});
 	});
 
@@ -138,7 +131,8 @@
 		$scope.sessionTimeout = false;
 		$scope.changePasswordSuccessful = false;
 
-		 $scope.changePassword = function() {
+		//expose change password to the change_password.html page
+		$scope.changePassword = function() {
 
     		if(checkPasswords($scope.password1, $scope.password2)){
     			barginService.changePassword($scope.oldPassword, $scope.password1);

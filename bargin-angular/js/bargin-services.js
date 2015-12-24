@@ -157,17 +157,26 @@
 			};
 
 
+			/* 
+			Add item makes two http requests: 
+			1) add the item to the item collection
+			1b) associate the item to the user
+			2) creates the activity in the bargin group
+			*/
 			this.addItem = function(name, price, descr){
 				itemUuid = this.addItemToCollection(name, price, descr);
+				this.createRelationBetweenUserAndItem(itemUuid);
+				this.createRelationBetweenItemAndUser(itemUuid);
 				console.log("item uuid is " + itemUuid);
 				this.createRelationBetweenUserAndItem(itemUuid);	
 			}
+
 
 			/*
 				Add the item.
 			*/
 			this.addItemToCollection = function(name, price, descr) { 
-				payload = '{"name":"' + name + '", "price":' + price + ', "descr":"' + descr + '"}';
+				payload = '{"name2":"' + name + '", "price":' + price + ', "descr":"' + descr + '"}';
 				//add the item to the item collection
 				var itemUuid;
 
@@ -200,8 +209,7 @@
 				Create the relationship between the user and items.
 			*/
 			this.createRelationBetweenUserAndItem = function(itemUuid) { 
-				payload = '';
-				//add the item to the item collection
+				payload = '';			
 				$http({
 					url: BASE_URL + '/users/${user}/lists/items/' + itemUuid,
 					params:{'access_token': $window.sessionStorage.token},
@@ -216,6 +224,29 @@
 					}).error(function (data, status, headers, config) {
 						console.log(data);
 						$rootScope.$broadcast("user list item failed");
+					});	
+			};
+
+
+			/*
+				Create the relationship between the item and user.
+			*/
+			this.createRelationBetweenItemAndUser = function(itemUuid) { 
+				payload = '';				
+				$http({
+					url: BASE_URL + '/items/' + itemUuid + 'listedby/users/${user}' ,
+					params:{'access_token': $window.sessionStorage.token},
+					method: "POST",
+					headers: {'content-type':'application/json'},
+					data: payload				
+				}).success(function (data, status, headers, config) {
+						resultObject = data.entities[0];	
+						console.log(resultObject);
+						$rootScope.$broadcast("item listed by user.");							
+						//$location.path('/main');
+					}).error(function (data, status, headers, config) {
+						console.log(data);
+						$rootScope.$broadcast("item listed by user failed.");
 					});	
 			};
 
@@ -237,10 +268,7 @@
 				}).error(function (data, status, headers, config) {
 					console.log(data);
 					$rootScope.$broadcast("Get Users Profile Failed");
-				});		
-
-			//associate the item to the user - do I need to do this? No. Just add the user to the item object
-			//associate the user to the item - 
+				});				
 
 			};
 
